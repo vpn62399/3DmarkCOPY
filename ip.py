@@ -21,14 +21,12 @@ def net(HOST):
         return
 
 while True:
-    try:
-        for v in HOSTS:
+    for v in HOSTS:
+        try:
             HOST = v
             net(v)
             pygame.time.wait(500) 
-    except:
-        print(v)
-        alarm_sound.play()
-        pygame.time.wait(500)  # 
-
-
+        except:
+            print(v)
+            alarm_sound.play()
+            pygame.time.wait(500)  # 
