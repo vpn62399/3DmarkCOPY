@@ -2,9 +2,12 @@
 echo ****************************************
 echo *                                      *
 echo *       Start from 2023H1              *
-echo *          ver 1.0.5.1                 *
+echo *          ver 1.0.5.29                *
 echo *                                      *
 echo ****************************************
+
+PowerShell Set-Service -Name wuauserv -StartupType Disabled
+PowerShell Stop-Service -Name wuauserv
 
 if EXIST SE7SN.txt (
     for /F %%s in (SE7SN.txt) do set SE7NO=%%s
@@ -15,8 +18,6 @@ if EXIST SE7SN.txt (
 )
 
 %HOMEDRIVE%\Windows\System32\UserAccountControlSettings.exe
-PowerShell Set-Service -Name wuauserv -StartupType Disabled
-PowerShell Stop-Service -Name wuauserv
 
 echo %SE7NO% >> SE7SN.txt
 echo %SE7NO% >> %SE7NO%
@@ -51,42 +52,41 @@ robocopy %xp% %USERPROFILE%\Desktop NirCmdSavescreenshot.cmd /is /xx
 robocopy %xp% %USERPROFILE%\Desktop ncpacpl.cmd /is /xx 
 robocopy %xp% %USERPROFILE%\Desktop CFGpower.cmd /is /xx 
 robocopy %xp%\Tools %USERPROFILE%\Desktop "CrystalDiskMark7_0_0h.zip" /is /xx 
-robocopy %xp%\Tools %USERPROFILE%\Desktop "GPU-Z.2.52.0.exe" /is /xx 
+robocopy %xp%\Tools %USERPROFILE%\Desktop "GPU-Z.2.53.0.exe" /is /xx 
 robocopy %xp%\Tools %USERPROFILE%\Desktop "FurMark_1.30.0.0_Setup.exe" /is /xx 
 robocopy %xp%\Tools %USERPROFILE%\Desktop "FSCapture90.zip" /is /xx 
 robocopy %xp%\FFmpeg %USERPROFILE%\Desktop "ffmpeg-5.1.2-essentials_build.7z" /is /xx 
 robocopy %xp%\windowsdesktop-runtime-6.0.7-win-x64 %USERPROFILE%\Desktop "windowsdesktop-runtime-6.0.7-win-x64.exe" /is /xx 
-%USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\ %xp%\Tools\cpu-z_2.05-en.zip cpuz_x64.exe
+%USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\ %xp%\Tools\cpu-z_2.06-en.zip cpuz_x64.exe
 
 :Chrome
 msiexec /i %xp%\googlechromestandaloneenterprise64.msi /passive /qf /norestart
 
 rem  NVIDIA VGA
-curl -O http://slax/ssd/NVIDIA/531.68-desktop-win10-win11-64bit-international-dch-whql.exe
+curl -O http://slax/ssd/NVIDIA/532.03-desktop-win10-win11-64bit-international-dch-whql.exe
 curl -O http://slax/ssd/NVIDIA/474.30-desktop-win10-win11-64bit-international-dch-whql.exe
 
 rem AMD Radeon Drivers
-curl -O http://slax/ssd/AMD/whql-amd-software-adrenalin-edition-23.4.2-win10-win11-apr20.exe
+curl -O http://slax/ssd/AMD/whql-amd-software-adrenalin-edition-23.5.1-win10-win11-may24.exe
 
 
 rem 3Dmark
 :3Dmark
-robocopy %xp%\3Dmark %USERPROFILE%\Desktop 3DMark-v2-26-8092.zip /is /xx 
-rem curl -O http://slax/ssd/3Dmark/3DMark-v2-25-8043.zip
+robocopy %xp%\3Dmark %USERPROFILE%\Desktop 3DMark-v2-26-8098.7z /is /xx 
 
 if %errorlevel% GTR 1 (
 	goto 3Dmark
 ) else (
-	rem %USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\3dmark %USERPROFILE%\Desktop\3DMark-v2-25-8043.zip
-	rem start %USERPROFILE%\Desktop\3dmark\3dmark-setup.exe /silent /install
-	%USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\3dmark %USERPROFILE%\Desktop\3DMark-v2-26-8092.zip
-	start %USERPROFILE%\Desktop\3dmark\3DMark-v2-26-8092\3dmark-setup.exe /silent /install
+	%USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\3dmark %USERPROFILE%\Desktop\3DMark-v2-26-8098.7z
+	start %USERPROFILE%\Desktop\3dmark\3dmark-setup.exe /silent /install
 )
+
+rem PCMark
+rem %USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\PCMark %xp%\3Dmark\PCMark10-v2-1-2600.7z
 
 rem FFxbench
 :FFxbench
 robocopy %xp%\3Dmark %USERPROFILE%\Desktop ffxvbench_installer.zip /is /xx 
-rem curl -O http://slax/ssd/3Dmark/ffxvbench_installer.zip
 
 if %errorlevel% GTR 1 (
 	goto FFxbench
@@ -99,6 +99,18 @@ if AMD64 == %PROCESSOR_IDENTIFIER:~0,5% (
 	rem AMD OnbordVGA
 	robocopy %xp%\AMD %USERPROFILE%\Desktop amd_vga_driver.zip /is /xx 
 	%USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\AMD_VGA %USERPROFILE%\Desktop\amd_vga_driver.zip
+
+	robocopy %xp%\AMD\AMD_Chipset_Drivers %USERPROFILE%\Desktop DRV_Chipset_AMD_AM5_TP_TSD_W11_64_V503242328_20230418R.zip /is /xx
+	%USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\AMD_Chipset\AM5 %USERPROFILE%\Desktop\DRV_Chipset_AMD_AM5_TP_TSD_W11_64_V503242328_20230418R.zip
+
+	robocopy %xp%\AMD\AMD_Chipset_Drivers %USERPROFILE%\Desktop DRV_Chipset_AMD_AM5_SZ-TSD_W11_64_V407132243_20220901R.zip /is /xx
+	%USERPROFILE%\Desktop\7za.exe x -y -o%USERPROFILE%\Desktop\AMD_Chipset\AM4 %USERPROFILE%\Desktop\DRV_Chipset_AMD_AM5_SZ-TSD_W11_64_V407132243_20220901R.zip
+
+	timeout 10
+	call %USERPROFILE%\Desktop\AMD_Chipset\AM4\silentinstall.cmd
+	timeout 10
+	call %USERPROFILE%\Desktop\AMD_Chipset\AM5\silentinstall.cmd
+
 
 ) else (
 	rem Intel VGA
@@ -160,3 +172,7 @@ rem Windowsのバッチファイル中で日付をファイル名に使用する
 rem https://atmarkit.itmedia.co.jp/ait/articles/0405/01/news002.html
 rem PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 30 Stepping 5, GenuineIntel
 rem echo %PROCESSOR_IDENTIFIER:~0,7%    = Intel64
+rem https://www.4gamer.net/games/282/G028236/20170622055/
+rem PCMARK10
+rem https://www.4gamer.net/games/143/G014363/20130203001/
+rem 3Dmark
