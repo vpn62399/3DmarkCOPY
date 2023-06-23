@@ -2,12 +2,13 @@
 
 import socket
 import pygame
-from time import localtime, strftime
+import time
+import datetime
 
 
 PORT = 80
 BUFFER_SIZE = 1024
-HOSTS ={'www.google.com':'www.google.com','DHCP':'192.168.1.20','SLAX':'192.168.1.247'}
+HOSTS ={'www.google.com':'www.google.com','DHCP':'192.168.1.20'}
 
 pygame.mixer.init()
 alarm_sound = pygame.mixer.Sound('alarm.wav')
@@ -28,7 +29,6 @@ while True:
             net(HOST)
             pygame.time.wait(500) 
         except:
-            tm = strftime("%Y/%m/%d %H:%M:%S", localtime())
-            print(v + ' ------ ' + HOSTS[v] + ' ' + tm)
+            print(v + ' ------ ' + HOSTS[v] + '                 ' + str(datetime.datetime.now()))
             alarm_sound.play()
             pygame.time.wait(500)  # 
